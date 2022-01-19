@@ -1,7 +1,7 @@
 ## Token Minter
 
 Mint tokens on testnets or mainnet from a payment address and send them directly to your wallet.
-Running this scripts requires `cardano-node` and `cardano-wallet` running on your machine. You also need access to node socket path.
+Running this scripts requires `cardano-node` running on your machine. 
 
 ### How to use it
 
@@ -9,7 +9,7 @@ Running this scripts requires `cardano-node` and `cardano-wallet` running on you
 
 2. Create policy script and payment address:
 ```
-export POLICY_DIR=amazing_coin
+export POLICY_DIR=happy_coin
 rake create_policy_script
 rake create_payment_addr
 ```
@@ -19,16 +19,16 @@ Note that single mint tx that sends tokens to your wallet will cost ~1.8 ADA.
 
 4. Mint some tokens.
 
-First set the ID of the wallet your tokens will be sent to:
+First set the destination address your tokens will be sent to:
 ```
-export DEST_WALLET_ID=a660633ae1f4f95ec386caf4648dacd876c51a8c
+export DEST_ADDRESS=addr_test1qpm62kuf96dz70cjch9twczycnalyvm4zwegs2rxfa3d6qgw4q8hcawcad3gyt87fnw5zc0xq92dsewmse4afgxkg96skqvcen
 ```
 
 Mint multiple tokens in single transaction:
 ```
-# 1 tx with 1500 of AmazingCoin
+# 1 tx with 100000 of HappyCoin
 
-rake mint[1,1500,AmazingCoin,1]
+rake mint[1,100000,HappyCoin,1]
 ```
 
 Mint 1 token per transaction (NFTs):

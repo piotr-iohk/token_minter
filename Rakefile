@@ -11,7 +11,7 @@ RSpec::Core::RakeTask.new(:spec)
 # address and keys will be in CONTEXT/POLICY_DIR/payment.*
 task :create_payment_addr do |t, args|
   raise "POLICY_DIR is not set" if POLICY_DIR.empty?
-  
+
   ma_dir = "#{CONTEXT}/#{POLICY_DIR}"
   FileUtils.mkdir_p(ma_dir)
 
@@ -82,14 +82,13 @@ task :mint, [:num_of_txs, :tokens_amt_per_tx, :asset_name_prefix, :same_asset_na
   asset_name_prefix = args[:asset_name_prefix] # asset name prefix
   same_asset_name = args[:same_asset_name] || '0' # if 1 then all have same asset name, if 0 all have asset_nameN (where N is incremented from 0)
   log "---"
-  log "Minting #{num_of_txs} times of an '#{asset_name_prefix}' and sending to wallet: #{DEST_WALLET_ID}"
+  log "Minting #{num_of_txs} times of an '#{asset_name_prefix}' and sending to address: #{DEST_ADDRESS}"
   log "---"
 
   # ----------------------------
 
-  wallet = CardanoWallet.new
   num_of_txs.times do |i|
-    dest_address = wallet.shelley.addresses.list(DEST_WALLET_ID).sample['id']
+    dest_address = DEST_ADDRESS
     asset_name = (same_asset_name == '1') ? asset_name_prefix : "#{asset_name_prefix}#{i}"
     mint_and_send(asset_name, dest_address, tokens_amt_per_tx)
   end

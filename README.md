@@ -1,8 +1,8 @@
 ## Token Minter
 
-Mint tokens on testnets or mainnet from a payment address and send them directly to your address.
+Mint tokens on testnets or mainnet from a payment address and send them directly to preferred destination address.
 
-Running this scripts requires `cardano-node` running on your machine. 
+Running this scripts requires `cardano-node` running on your machine.
 
 ### How to use it
 
@@ -16,7 +16,7 @@ rake create_payment_addr
 ```
 
 3. Fund payment address from the faucet. (This is the address from which tokens will be minted)
-Note that single mint tx that sends tokens to your wallet will cost ~1.8 ADA.
+Note that single mint tx that sends tokens to your wallet will cost ~1.5 ADA.
 
 4. Mint some tokens.
 
@@ -29,14 +29,14 @@ Mint multiple tokens in single transaction:
 ```
 # 1 tx with 100000 of HappyCoin
 
-rake mint[1,100000,HappyCoin,1]
+rake mint[1,100000,HappyCoin]
 ```
 
 Mint 1 token per transaction (NFTs):
 ```
-# 5 txs each minting only 1 token with asset name: NFTx0, NFTx1...etc.
+# 5 txs each minting only 1 token with incremented asset name: NFTx0, NFTx1...etc.
 
-rake mint[5,1,NFTx]
+rake mint[5,1,NFTx,+]
 ```
 
 ### Limitations

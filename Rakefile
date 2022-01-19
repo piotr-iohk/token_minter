@@ -74,13 +74,13 @@ end
 
 ##
 # Minting a token and sending to wallet address picked randomly
-# e.g. rake mint[1,1500,HappyCoin,1] - 1 tx minting 1500 of HappyCoin
-#      rake mint[5,1,NFTx] - 5 txs each minting 1 token named NFTx0, NFTx1...etc.
-task :mint, [:num_of_txs, :tokens_amt_per_tx, :asset_name_prefix, :same_asset_name] do |_, args|
+# e.g. rake mint[1,1500,HappyCoin] - 1 tx minting 1500 of HappyCoin
+#      rake mint[5,1,NFTx,+] - 5 txs each minting 1 token named NFTx0, NFTx1...etc.
+task :mint, [:num_of_txs, :tokens_amt_per_tx, :asset_name_prefix, :increment] do |_, args|
   num_of_txs = args[:num_of_txs].to_i # how many mint transactions
   tokens_amt_per_tx = args[:tokens_amt_per_tx].to_i # amount to be minted in each tx
   asset_name_prefix = args[:asset_name_prefix] # asset name prefix
-  same_asset_name = args[:same_asset_name] || '0' # if 1 then all have same asset name, if 0 all have asset_nameN (where N is incremented from 0)
+  increment = args[:increment] || '~' # if increment = '+' all have asset_nameN (where N is incremented from 0)
   log "---"
   log "Minting #{num_of_txs} times of an '#{asset_name_prefix}' and sending to address: #{DEST_ADDRESS}"
   log "---"
@@ -89,7 +89,7 @@ task :mint, [:num_of_txs, :tokens_amt_per_tx, :asset_name_prefix, :same_asset_na
 
   num_of_txs.times do |i|
     dest_address = DEST_ADDRESS
-    asset_name = (same_asset_name == '1') ? asset_name_prefix : "#{asset_name_prefix}#{i}"
+    asset_name = (increment == '+') ? "#{asset_name_prefix}#{i}" : asset_name_prefix
     mint_and_send(asset_name, dest_address, tokens_amt_per_tx)
   end
 

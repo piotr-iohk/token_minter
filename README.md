@@ -1,6 +1,7 @@
 ## Token Minter
 
-Mint tokens on testnets or mainnet from a payment address and send them directly to your wallet.
+Mint tokens on testnets or mainnet from a payment address and send them directly to your address.
+
 Running this scripts requires `cardano-node` running on your machine. 
 
 ### How to use it

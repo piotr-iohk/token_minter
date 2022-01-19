@@ -13,7 +13,7 @@ module Minter
       "721": {
         "#{policy_id}": {
           "#{asset_name}": {
-            "name": "Test NFT ##{asset_name.split(/(\d+)/).last}",
+            "name": "Test NFT ##{asset_name}",
             "image": "ipfs://XXXXYYYYZZZZ"
           }
         }
@@ -26,11 +26,11 @@ module Minter
     policy_id = get_policy_id
     m = get_mint_metadata(policy_id, asset_name)
 
-    File.open("#{CONTEXT}/metadata.json", "w") do |f|
+    File.open("#{CONTEXT}/#{POLICY_DIR}/metadata.json", "w") do |f|
       f.write(m)
     end
 
-    "#{CONTEXT}/metadata.json"
+    "#{CONTEXT}/#{POLICY_DIR}/metadata.json"
   end
 
   ##
@@ -44,19 +44,21 @@ module Minter
      res.split("\n").last.split(" ")
   end
 
-  def cli_build_raw(fee, utxo, ix, amount, out_address, asset_name, mint_amount = 1)
+  def cli_build_tx(utxo, ix, amount, out_address, asset_name, mint_amount = 1)
     min_utxo_value = 1500000
     policy_id = get_policy_id
-    cmd %(cardano-cli transaction build-raw \
-            --fee #{fee} \
+    asset_id = asset_name ? "#{policy_id}.#{asset_name.unpack("H*").first}" : policy_id
+    puts "ASSET ID: #{asset_id}"
+    cmd %(cardano-cli transaction build \
+            #{network_param} \
             --tx-in #{utxo}##{ix} \
-            --tx-out="#{get_payment_addr}+#{amount.to_i - fee - min_utxo_value}" \
-            --tx-out="#{out_address}+#{min_utxo_value}+#{mint_amount} #{policy_id}.#{asset_name}" \
-            --mint="#{mint_amount} #{policy_id}.#{asset_name}" \
-            --metadata-json-file #{CONTEXT}/metadata.json \
+            --change-address="#{get_payment_addr}" \
+            --tx-out="#{out_address}+#{min_utxo_value}+#{mint_amount} #{asset_id}" \
+            --mint="#{mint_amount} #{asset_id}" \
+            --metadata-json-file #{CONTEXT}/#{POLICY_DIR}/metadata.json \
             --mint-script-file #{CONTEXT}/#{POLICY_DIR}/policy.script \
+            --witness-override 2 \
             --out-file #{CONTEXT}/#{POLICY_DIR}/tx.txbody)
-    #       --invalid-hereafter #{HEREAFTER} \
   end
 
   def get_protocol_json
@@ -67,19 +69,6 @@ module Minter
              --out-file #{protocol_json_file})
     end
     protocol_json_file
-  end
-
-  def get_fee(utxo, ix, amount, out_address, asset_name)
-    protocol_json_file = get_protocol_json
-    cli_build_raw(1000000, utxo, ix, amount, out_address, asset_name)
-    fee = cmd %(cardano-cli transaction calculate-min-fee \
-                  --tx-body-file #{CONTEXT}/#{POLICY_DIR}/tx.txbody \
-                  #{network_param} \
-                  --protocol-params-file #{protocol_json_file} \
-                  --tx-in-count 1 \
-                  --tx-out-count 2 \
-                  --witness-count 3)
-    fee.split(' ').first.to_i
   end
 
   def cli_sign
@@ -104,8 +93,7 @@ module Minter
     log "MINTING and Sending #{asset_name} to #{dest_address}"
     create_metadata(asset_name)
     utxo, ix, amount = cli_query_utxo
-    fee = get_fee(utxo, ix, amount , dest_address, asset_name)
-    cli_build_raw(fee, utxo, ix, amount, dest_address, asset_name, mint_amount)
+    cli_build_tx(utxo, ix, amount, dest_address, asset_name, mint_amount)
     cli_sign
     cli_submit
 

@@ -17,5 +17,9 @@ def network_param
     '--mainnet'
   when 'alonzo-white'
     '--testnet-magic 7'
+  when 'alonzo-purple'
+    '--testnet-magic 8'
+  when 'shelley_qa'
+    '--testnet-magic 3'
   end
 end

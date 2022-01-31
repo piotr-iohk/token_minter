@@ -20,7 +20,7 @@ For Windows there is an installer (https://www.ruby-lang.org/en/documentation/in
 $ cd token_minter
 $ bundle install
 ```
-ℹ️ _if installing dependencies fails you may have to install `bundler` before_
+ > ℹ️ _if installing dependencies fails you may have to install `bundler` before_
 ```bash
 $ gem install bundler
 ```
@@ -51,6 +51,8 @@ Files will be created in the `fixtures/$NETWORK/$POLICY_DIR`.
 Note that single mint tx that sends tokens to your wallet will cost ~1.5 ADA.
 
 4. Mint some tokens.
+
+ > ℹ️ Before minting you may want to adjust metadata that will be generated in the minting transaction in the [minter.rb](https://github.com/piotr-iohk/token_minter/blob/master/helpers/minter.rb#L11-L22). 
 
 First set the destination address your tokens will be sent to:
 ```bash

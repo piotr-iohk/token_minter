@@ -3,9 +3,9 @@ require_relative 'helpers/minter'
 
 ##
 # These can be set via Env variables, if not default values will be assigned
-ENV['NETWORK'] ||= "testnet" # mainnet | testnet | alonzo-white
+ENV['NETWORK'] ||= "testnet" # mainnet | testnet | alonzo-white | shelley_qa
 ENV['CARDANO_NODE_SOCKET_PATH'] ||= "/home/piotr/t/node/relay1/node.socket"
-ENV['POLICY_DIR'] ||= "monda3"
+ENV['POLICY_DIR'] ||= "instruments"
 
 NETWORK = ENV['NETWORK']
 CARDANO_NODE_SOCKET_PATH = ENV['CARDANO_NODE_SOCKET_PATH']

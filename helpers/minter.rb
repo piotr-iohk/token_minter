@@ -50,6 +50,7 @@ module Minter
     asset_id = asset_name ? "#{policy_id}.#{asset_name.unpack("H*").first}" : policy_id
     puts "ASSET ID: #{asset_id}"
     cmd %(cardano-cli transaction build \
+            --#{ERA}-era \
             #{network_param} \
             --tx-in #{utxo}##{ix} \
             --change-address="#{get_payment_addr}" \

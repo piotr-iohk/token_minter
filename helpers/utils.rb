@@ -21,5 +21,7 @@ def network_param
     '--testnet-magic 8'
   when 'shelley_qa'
     '--testnet-magic 3'
+  when 'vasil-dev', 'vasil-qa'
+    '--testnet-magic 9'
   end
 end

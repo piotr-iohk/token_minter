@@ -3,7 +3,7 @@ require_relative 'helpers/minter'
 
 ##
 # These can be set via Env variables, if not default values will be assigned
-ENV['NETWORK'] ||= "vasil-dev" # mainnet | testnet | alonzo-white | shelley_qa | vasil-dev
+ENV['NETWORK'] ||= "preview" # mainnet | testnet | alonzo-white | shelley_qa | vasil-dev | preview | preprod
 ENV['ERA'] ||= "Babbage" # Mary | Alonzo | Babbage etc. name of the era the node is at
 ENV['CARDANO_NODE_SOCKET_PATH'] ||= "/home/piotr/wb/cardano-wallet/test/e2e/state/node_db/vasil-dev/node.socket"
 ENV['POLICY_DIR'] ||= "sad_coin"

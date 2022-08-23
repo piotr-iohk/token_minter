@@ -23,5 +23,9 @@ def network_param
     '--testnet-magic 3'
   when 'vasil-dev', 'vasil-qa'
     '--testnet-magic 9'
+  when 'preview'
+    '--testnet-magic 2'
+  when 'preprod'
+    '--testnet-magic 1'
   end
 end

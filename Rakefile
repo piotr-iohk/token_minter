@@ -36,7 +36,7 @@ task :check_payment_addr do |t, args|
 
   include Minter
   puts get_payment_addr
-  cli_query_utxo
+  get_all_utxos
 end
 
 ##

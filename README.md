@@ -74,5 +74,7 @@ $ rake mint[5,1,NFTx,+]
 ```
 
 ### Limitations
- - payment address needs to have only one utxo
- - tokens are minted from single utxo therefore the script waits until previous minting tx is done
+
+It is advisable that payment address (from which minting is done) has only one utxo for smooth operation. It _should_ work most of the cases if there are more utxos there though.
+
+

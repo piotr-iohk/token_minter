@@ -34,7 +34,7 @@ module Minter
   end
 
   ##
-  # gets address utxo, ix, and amount
+  # gets address' last utxo, ix, and amount
   def cli_query_utxo
     res = cmd %(cardano-cli query utxo \
                  --address #{get_payment_addr} \
@@ -44,15 +44,34 @@ module Minter
      res.split("\n").last.split(" ")
   end
 
-  def cli_build_tx(utxo, ix, amount, out_address, asset_name, mint_amount = 1)
+  def get_all_utxos
+    res = cmd %(cardano-cli query utxo \
+                 --address #{get_payment_addr} \
+                 #{network_param})
+    res.split('-' * 86).last.split("\n").map do |line|
+      line.split(" ")
+    end.filter { |x| x.length > 0}
+    # [
+    #   [utxo, ix, amount ...],
+    #   [utxo, ix, amount ...],
+    #   [utxo, ix, amount ...] 
+    # ]
+  end
+
+  def cli_build_tx(utxos, out_address, asset_name, mint_amount = 1)
     min_utxo_value = 1500000
     policy_id = get_policy_id
     asset_id = asset_name ? "#{policy_id}.#{asset_name.unpack("H*").first}" : policy_id
     puts "ASSET ID: #{asset_id}"
+
+    inputs = utxos.map do |utxo, ix, _|
+      "--tx-in #{utxo}##{ix}"
+    end.join(" ")
+
     cmd %(cardano-cli transaction build \
             --#{ERA}-era \
             #{network_param} \
-            --tx-in #{utxo}##{ix} \
+            #{inputs} \
             --change-address="#{get_payment_addr}" \
             --tx-out="#{out_address}+#{min_utxo_value}+#{mint_amount} #{asset_id}" \
             --mint="#{mint_amount} #{asset_id}" \
@@ -93,12 +112,12 @@ module Minter
   def mint_and_send(asset_name, dest_address, mint_amount = 1)
     log "MINTING and Sending #{asset_name} to #{dest_address}"
     create_metadata(asset_name)
-    utxo, ix, amount = cli_query_utxo
-    cli_build_tx(utxo, ix, amount, dest_address, asset_name, mint_amount)
+    utxos = get_all_utxos
+    cli_build_tx(utxos, dest_address, asset_name, mint_amount)
     cli_sign
     cli_submit
 
-    wait_for_utxo_change(utxo)
+    wait_for_utxo_change(utxos.first[0])
   end
 
   def wait_for_utxo_change(utxo)

@@ -61,9 +61,9 @@ $ export DEST_ADDRESS=addr_test1qpm62kuf96dz70cjch9twczycnalyvm4zwegs2rxfa3d6qgw
 
 Mint multiple tokens in single transaction:
 ```bash
-# 1 tx with 100000 of HappyCoin
+# 1 tx with 200000 of HappyCoin
 
-$ rake mint[1,100000,HappyCoin]
+$ rake mint[1,200000,HappyCoin]
 ```
 
 Mint 1 token per transaction (NFTs):
